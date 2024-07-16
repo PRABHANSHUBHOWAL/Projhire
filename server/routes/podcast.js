@@ -2,32 +2,32 @@ import express from "express";
 import { verifyToken } from "../middleware/verifyToken.js";
 import {
   addView,
-  // addepisodes,
-  createProject,
-  likeProject,
+  addepisodes,
+  createPodcast,
+  favoritPodcast,
   getByCategory,
   getByTag,
-  getProjectById,
-  getProjects,
-  mostpopular,
+  getPodcastById,
+  getPodcasts,
   random,
   search,
-} from "../controllers/projects.js";
+  mostpopular,
+} from "../controllers/podcasts.js";
 
 const router = express.Router();
 
-//create a Project
-router.post("/", verifyToken, createProject);
-//get all Projects
-router.get("/", getProjects);
-//get Project by id
-router.get("/get/:id", getProjectById);
+//create a podcast
+router.post("/", verifyToken, createPodcast);
+//get all podcasts
+router.get("/", getPodcasts);
+//get podcast by id
+router.get("/get/:id", getPodcastById);
 
 //add episode to a
-// router.post("/episode", verifyToken, addepisodes);
+router.post("/episode", verifyToken, addepisodes);
 
-//favorite/unfavorite Project
-router.post("/like", verifyToken, likeProject);
+//favorite/unfavorite podcast
+router.post("/favorites", verifyToken, favoritPodcast);
 
 //add view
 router.post("/addview/:id", addView);

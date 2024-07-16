@@ -31,7 +31,7 @@ export const signup = async (req, res, next) => {
         message: "Email is already in use.",
       });
     }
-    // Create and save the user
+    // Step 1 - Create and save the userconst salt = bcrypt.genSaltSync(10);
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
     const newUser = new User({ ...req.body, password: hashedPassword });
@@ -84,12 +84,14 @@ export const signin = async (req, res, next) => {
     next(err);
   }
 };
+
 export const logout = (req, res) => {
   res.clearCookie("access_token").json({ message: "Logged out" });
 };
 export const googleAuthSignIn = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
+
     if (!user) {
       try {
         const user = new User({ ...req.body, googleSignIn: true });
@@ -110,7 +112,7 @@ export const googleAuthSignIn = async (req, res, next) => {
       return next(
         createError(
           201,
-          "User already exists with this email but can't do google authorization"
+          "User already exists with this email can't do google auth"
         )
       );
     }
@@ -134,32 +136,32 @@ export const generateOTP = async (req, res) => {
     subject: "Account Verification OTP",
     html: `
         <div style="font-family: Poppins, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
-    <h1 style="font-size: 22px; font-weight: 500; color: #854CE6; text-align: center; margin-bottom: 30px;">Verify Your PROHIRE Account</h1>
-    <div style="background-color: #FFF; border: 1px solid #e5e5e5; border-radius: 5px; box-shadow: 0px 3px 6px rgba(0,0,0,0.05);">
+        <h1 style="font-size: 22px; font-weight: 500; color: #854CE6; text-align: center; margin-bottom: 30px;">Verify Your ECHOWAVE Account</h1>
+        <div style="background-color: #FFF; border: 1px solid #e5e5e5; border-radius: 5px; box-shadow: 0px 3px 6px rgba(0,0,0,0.05);">
         <div style="background-color: #854CE6; border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 20px 0;">
             <h2 style="font-size: 28px; font-weight: 500; color: #FFF; text-align: center; margin-bottom: 10px;">Verification Code</h2>
             <h1 style="font-size: 32px; font-weight: 500; color: #FFF; text-align: center; margin-bottom: 20px;">${req.app.locals.OTP}</h1>
         </div>
         <div style="padding: 30px;">
             <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Dear ${name},</p>
-            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Thank you for creating a PROHIRE account. To activate your account, please enter the following verification code:</p>
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Thank you for creating a ECHOWAVE account. To activate your account, please enter the following verification code:</p>
             <p style="font-size: 20px; font-weight: 500; color: #666; text-align: center; margin-bottom: 30px; color: #854CE6;">${req.app.locals.OTP}</p>
-            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Please enter this code in the PROHIRE app to activate your account.</p>
-            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">If you did not create a PROHIRE account, please disregard this email.</p>
+            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Please enter this code in the ECHOWAVE app to activate your account.</p>
+            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">If you did not create a ECHOWAVE account, please disregard this email.</p>
         </div>
     </div>
     <br>
-    <p style="font-size: 16px; color: #666; margin-bottom: 20px; text-align: center;">Best regards,<br>The PROHIRE Team</p>
+    <p style="font-size: 16px; color: #666; margin-bottom: 20px; text-align: center;">Best regards,<br>The ECHOWAVE Team</p>
 </div>
         `,
   };
 
   const resetPasswordOtp = {
     to: email,
-    subject: "PROHIRE Reset Password Verification",
+    subject: "ECHOWAVE Reset Password Verification",
     html: `
             <div style="font-family: Poppins, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
-                <h1 style="font-size: 22px; font-weight: 500; color: #854CE6; text-align: center; margin-bottom: 30px;">Reset Your PROHIRE Account Password</h1>
+                <h1 style="font-size: 22px; font-weight: 500; color: #854CE6; text-align: center; margin-bottom: 30px;">Reset Your ECHOWAVE Account Password</h1>
                 <div style="background-color: #FFF; border: 1px solid #e5e5e5; border-radius: 5px; box-shadow: 0px 3px 6px rgba(0,0,0,0.05);">
                     <div style="background-color: #854CE6; border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 20px 0;">
                         <h2 style="font-size: 28px; font-weight: 500; color: #FFF; text-align: center; margin-bottom: 10px;">Verification Code</h2>
@@ -167,14 +169,14 @@ export const generateOTP = async (req, res) => {
                     </div>
                     <div style="padding: 30px;">
                         <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Dear ${name},</p>
-                        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">To reset your PROHIRE account password, please enter the following verification code:</p>
+                        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">To reset your ECHOWAVE account password, please enter the following verification code:</p>
                         <p style="font-size: 20px; font-weight: 500; color: #666; text-align: center; margin-bottom: 30px; color: #854CE6;">${req.app.locals.OTP}</p>
-                        <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Please enter this code in the PROHIRE app to reset your password.</p>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Please enter this code in the ECHOWAVE app to reset your password.</p>
                         <p style="font-size: 12px; color: #666; margin-bottom: 20px;">If you did not request a password reset, please disregard this email.</p>
                     </div>
                 </div>
                 <br>
-                <p style="font-size: 16px; color: #666; margin-bottom: 20px; text-align: center;">Best regards,<br>The PROHIRE Team</p>
+                <p style="font-size: 16px; color: #666; margin-bottom: 20px; text-align: center;">Best regards,<br>The ECHOWAVE Team</p>
             </div>
         `,
   };
@@ -220,7 +222,6 @@ export const findUserByEmail = async (req, res, next) => {
   const { email } = req.query;
   try {
     const user = await User.findOne({ email: email });
-    // console.log(user);
     if (user) {
       return res.status(200).send({
         message: "User found",

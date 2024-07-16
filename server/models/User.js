@@ -1,47 +1,42 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
-const UserSchema = new mongoose.Schema(
-  {
+const UserSchema = new mongoose.Schema({
     name: {
-      type: String,
-      required: true,
-      unique: false,
+        type: String,
+        required: true,
+        unique: false,
     },
     email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    githubUsername: {
-      type: String,
-      unique: true,
+        type: String,
+        required: true,
+        unique: true,
     },
     password: {
-      type: String,
-      default: "",
+        type: String,
+        default: "",
     },
     img: {
-      type: String,
-      default: "",
+        type: String,
+        default: "",
     },
-    googleSignIn: {
-      type: Boolean,
-      required: true,
-      default: false,
+    googleSignIn:{
+        type: Boolean,
+        required: true,
+        default: false,
     },
-    projects: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Projects",
-      default: [],
+    podcasts: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Podcasts",
+        default: [],
     },
-    liked: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Projects",
-      default: [],
-    },
-  },
-  { timestamps: true }
+    favorits: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Podcasts",
+        default: [],
+    }
+},
+    { timestamps: true }
 );
 
 export default mongoose.model("User", UserSchema);
